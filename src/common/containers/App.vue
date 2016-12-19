@@ -1,5 +1,6 @@
 <template>
   <div class="o-app">
+    <offline-indicator />
     <nav>
       <router-link to="/" exact>Home</router-link>
       <router-link to="/foo">Foo</router-link>
@@ -10,8 +11,13 @@
 </template>
 
 <script>
+  import OfflineIndicator from './OfflineIndicator.vue'
+
   export default {
-    name: 'app'
+    name: 'app',
+    components: {
+      'offline-indicator': OfflineIndicator
+    }
   }
 </script>
 
