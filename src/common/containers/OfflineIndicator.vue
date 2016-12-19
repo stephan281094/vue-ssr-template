@@ -1,24 +1,18 @@
 <template>
-  <div class="c-notifications">
-    <transition name="slide-top">
-      <div class="c-notification" v-if="offline">
-        <span class="c-notification__title">No internet connection</span>
-      </div>
-    </transition>
-  </div>
+  <transition name="slide-top">
+    <div class="c-notification" v-if="offline && !dismissed"
+      @click="dismissed = true">
+      <span class="c-notification__title">No internet connection</span>
+    </div>
+  </transition>
 </template>
 
 <script>
-  if (typeof window !== 'undefined') {
-    window.addEventListener('online', (event) => {
-      this.offline = !window.navigator.onLine
-    })
-  }
-
   export default {
     name: 'offline-indicator',
     data () {
       return {
+        dismissed: false,
         offline: false
       }
     },
@@ -29,6 +23,8 @@
         } else {
           this.offline = !window.navigator.onLine
         }
+
+        this.dismissed = false
       }
     },
     mounted () {
@@ -47,40 +43,32 @@
 </script>
 
 <style lang="sass">
-  .slide-top-enter-active,
-  .slide-top-leave-active {
-    transition: .35s ease-in-out;
-  }
-
   .slide-top-enter,
   .slide-top-leave-active {
+    opacity: 1;
     transform: translateX(0);
   }
 
   .slide-top-enter,
   .slide-top-leave-active {
-    transform: translateY(-100%);
-  }
-
-  .c-notifications {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    pointer-events: none;
+    opacity: 0;
+    transform: translateX(100%);
   }
 
   .c-notification {
-    position: relative;
-    max-width: 350px;
+    position: fixed;
+    right: 2rem;
+    bottom: 2rem;
     padding: 1rem;
     background-color: #000;
     color: #fff;
     box-shadow: 0 4px 0 -2px rgba(0, 0, 0, .1);
-    pointer-events: auto;
+    z-index: 200;
+    transition: .35s cubic-bezier(.87, -.41, .19, 1.44);
+    cursor: pointer;
+
+    &:active {
+      transform: scale(.95);
+    }
   }
 </style>
