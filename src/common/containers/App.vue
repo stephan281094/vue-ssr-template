@@ -1,5 +1,6 @@
 <template>
   <div class="o-app">
+    <progress-bar />
     <offline-indicator />
     <nav>
       <router-link to="/" exact>Home</router-link>
@@ -11,7 +12,7 @@
 </template>
 
 <script>
-  import OfflineIndicator from './OfflineIndicator.vue'
+  import OfflineIndicator from '../components/OfflineIndicator.vue'
 
   export default {
     name: 'app',
