@@ -13,11 +13,13 @@
 
 <script>
   import OfflineIndicator from '../components/OfflineIndicator.vue'
+  import ProgressBar from '../components/ProgressBar.vue'
 
   export default {
     name: 'app',
     components: {
-      'offline-indicator': OfflineIndicator
+      'offline-indicator': OfflineIndicator,
+      'progress-bar': ProgressBar
     }
   }
 </script>
