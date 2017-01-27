@@ -1,42 +1,59 @@
 const path = require('path')
-const webpack = require('webpack')
 const vueConfig = require('./vue-loader.config')
 
 module.exports = {
   devtool: '#source-map',
   entry: {
-    app: './src/client/index.js',
-    vendor: ['vue', 'vue-router', 'vuex', 'lru-cache', 'es6-promise']
+    app: './src/client.js',
+    vendor: [
+      'es6-promise',
+      'vue',
+      'vue-router',
+      'vue-meta',
+      'vuex',
+      'vuex-router-sync'
+    ]
   },
   output: {
     path: path.resolve(__dirname, '../dist'),
     publicPath: '/dist/',
-    filename: 'client.js'
+    filename: '[name].[chunkhash].js'
+  },
+  resolve: {
+    alias: {
+      '~public': path.resolve(__dirname, '../public'),
+      '~pages': path.resolve(__dirname, '../src/pages'),
+      '~components': path.resolve(__dirname, '../src/components'),
+      'styles': path.resolve(__dirname, '../src/styles')
+    }
   },
   module: {
-    loaders: [
+    noParse: /es6-promise\.js$/, // avoid webpack shimming process
+    rules: [
       {
         test: /\.vue$/,
-        loader: 'vue-loader'
+        loader: 'vue-loader',
+        options: vueConfig
       },
       {
         test: /\.js$/,
-        loader: 'babel-loader',
-        exclude: /node_modules/
+        loader: 'buble-loader',
+        exclude: /node_modules/,
+        options: {
+          objectAssign: 'Object.assign'
+        }
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
         loader: 'url-loader',
-        query: {
+        options: {
           limit: 10000,
           name: '[name].[ext]?[hash]'
         }
       }
     ]
   },
-  plugins: [
-    new webpack.LoaderOptionsPlugin({
-      vue: vueConfig
-    })
-  ]
+  performance: {
+    hints: process.env.NODE_ENV === 'production' ? 'warning' : false
+  }
 }

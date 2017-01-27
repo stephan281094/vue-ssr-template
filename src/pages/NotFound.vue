@@ -7,6 +7,9 @@
 
 <script>
   export default {
-    name: 'not_found'
+    name: 'page-notfound',
+    metaInfo: {
+      title: 'Page not found'
+    }
   }
 </script>

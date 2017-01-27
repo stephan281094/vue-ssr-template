@@ -42,7 +42,7 @@
   }
 </script>
 
-<style lang="sass">
+<style lang="scss">
   .slide-top-enter,
   .slide-top-leave-active {
     opacity: 1;

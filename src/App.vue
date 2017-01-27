@@ -1,6 +1,5 @@
 <template>
   <div class="o-app">
-    <progress-bar />
     <offline-indicator />
     <nav>
       <router-link to="/" exact>Home</router-link>
@@ -12,19 +11,30 @@
 </template>
 
 <script>
-  import OfflineIndicator from '../components/OfflineIndicator.vue'
-  import ProgressBar from '../components/ProgressBar.vue'
+  import OfflineIndicator from '~components/OfflineIndicator.vue'
 
   export default {
     name: 'app',
+    metaInfo: {
+      title: 'Vue SSR template',
+      meta: [
+        { charset: 'utf-8' },
+        { name: 'mobile-web-app-capable', content: 'yes' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui' },
+        { name: 'theme-color', content: '#000' }
+      ],
+      link: [
+        { rel: 'manifest', href: '/manifest.json' },
+        { rel: 'icon', href: '/favicon.ico' }
+      ]
+    },
     components: {
-      'offline-indicator': OfflineIndicator,
-      'progress-bar': ProgressBar
+      'offline-indicator': OfflineIndicator
     }
   }
 </script>
 
-<style lang="sass">
+<style lang="scss">
   *,
   *:before,
   *:after {

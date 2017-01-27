@@ -1,11 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
-// Containers
-import Home from './containers/Home.vue'
-import NotFound from './containers/NotFound.vue'
+import Meta from 'vue-meta'
 
 Vue.use(Router)
+Vue.use(Meta)
+
+import Home from '~pages/Home.vue'
+import NotFound from '~pages/NotFound.vue'
 
 export default new Router({
   mode: 'history',
