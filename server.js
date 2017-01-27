@@ -52,7 +52,7 @@ const serve = (path, cache) => express.static(resolve(path), {
 
 app.use(serve('./public', true))
 app.use(compression({ threshold: 0 }))
-app.use('/service-worker.js', serve('./dist/service-worker.js'))
+app.use('/sw.js', serve('./dist/sw.js'))
 app.use('/dist', serve('./dist'))
 
 app.get('*', (req, res) => {

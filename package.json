@@ -2,6 +2,7 @@
   "name": "vue-ssr-template",
   "description": "A Vue 2.0 server side rendering template",
   "author": "Stephan de Vries <stephan281094@gmail.com>",
+  "license": "MIT",
   "private": false,
   "scripts": {
     "dev": "node server",
@@ -14,6 +15,9 @@
   "engines": {
     "node": ">=6.0",
     "npm": ">=3.0"
+  },
+  "standard": {
+    "globals": ["self", "URL"]
   },
   "dependencies": {
     "compression": "^1.6.2",
@@ -40,8 +44,8 @@
     "node-sass": "^4.2.0",
     "rimraf": "^2.5.4",
     "sass-loader": "^4.1.1",
+    "serviceworker-webpack-plugin": "^0.1.8",
     "standard": "^8.6.0",
-    "sw-precache-webpack-plugin": "^0.7.0",
     "url-loader": "^0.5.7",
     "vue-loader": "^10.0.2",
     "vue-template-compiler": "^2.1.8",

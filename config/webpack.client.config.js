@@ -1,9 +1,11 @@
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const HTMLPlugin = require('html-webpack-plugin')
+const path = require('path')
+const ServiceWorkerPlugin = require('serviceworker-webpack-plugin')
 const webpack = require('webpack')
+
 const base = require('./webpack.base.config')
 const vueConfig = require('./vue-loader.config')
-const HTMLPlugin = require('html-webpack-plugin')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const SWPrecachePlugin = require('sw-precache-webpack-plugin')
 
 const config = Object.assign({}, base, {
   plugins: (base.plugins || []).concat([
@@ -39,11 +41,8 @@ if (process.env.NODE_ENV === 'production') {
         warnings: false
       }
     }),
-    new SWPrecachePlugin({
-      cacheId: 'vue-ssr-template',
-      filename: 'service-worker.js',
-      dontCacheBustUrlsMatching: /./,
-      staticFileGlobsIgnorePatterns: [/index\.html$/, /\.map$/]
+    new ServiceWorkerPlugin({
+      entry: path.join(__dirname, '../src/sw.js')
     })
   )
 }
