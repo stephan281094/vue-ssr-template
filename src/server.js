@@ -1,13 +1,8 @@
 import { app, router, store } from './app'
 
-const isDev = process.env.NODE_ENV !== 'production'
-const meta = app.$meta()
-
 export default (context) => {
-  const s = isDev && Date.now()
-
   router.push(context.url)
-  context.meta = meta
+  context.meta = app.$meta()
   const matchedComponents = router.getMatchedComponents()
 
   if (!matchedComponents.length) {
@@ -19,7 +14,6 @@ export default (context) => {
       return component.preFetch(store)
     }
   })).then(() => {
-    isDev && console.log(`data pre-fetch: ${Date.now() - s}ms`)
     context.initialState = store.state
     return app
   })

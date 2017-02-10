@@ -4,6 +4,7 @@ const vueConfig = require('./vue-loader.config')
 const HTMLPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const SWPrecachePlugin = require('sw-precache-webpack-plugin')
+const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
 
 const config = Object.assign({}, base, {
   plugins: (base.plugins || []).concat([
@@ -17,7 +18,8 @@ const config = Object.assign({}, base, {
     new HTMLPlugin({
       filename: '_index.html',
       template: 'config/template.html'
-    })
+    }),
+    new FriendlyErrorsWebpackPlugin()
   ])
 })
 
