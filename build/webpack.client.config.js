@@ -17,7 +17,7 @@ const config = Object.assign({}, base, {
     }),
     new HTMLPlugin({
       filename: '_index.html',
-      template: 'config/template.html'
+      template: 'build/template.html'
     }),
     new FriendlyErrorsWebpackPlugin()
   ])
