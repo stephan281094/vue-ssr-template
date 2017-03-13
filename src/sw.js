@@ -1,5 +1,6 @@
-const DIST_URL = global.location.origin + '/dist/'
-const CACHE_NAME = 'vue-ssr-template-' + (new Date()).toISOString()
+const { version } = require('../package.json')
+const DIST_URL = `${global.location.origin}/dist/`
+const CACHE_NAME = `vue-ssr-template-${version}`
 const { assets } = global.serviceWorkerOption
 const staticAssets = assets.map((path) => {
   return new URL(path, DIST_URL).toString()
@@ -37,6 +38,30 @@ self.addEventListener('activate', (event) => {
               return global.caches.delete(cacheName)
             })
         )
+      })
+  )
+})
+
+// Return the cache if we're offline
+self.addEventListener('fetch', (event) => {
+  event.respondWith(
+    global.fetch(event.request)
+      .then((response) => {
+        if (!response || response.status !== 200 || response.type !== 'basic') {
+          return response
+        }
+
+        const responseToCache = response.clone()
+
+        global.caches.open(CACHE_NAME)
+          .then((cache) => {
+            cache.put(event.request, responseToCache)
+          })
+
+        return response
+      })
+      .catch(() => {
+        return global.caches.match(event.request)
       })
   )
 })

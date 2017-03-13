@@ -2,6 +2,7 @@
   "name": "vue-ssr-template",
   "description": "A Vue 2.0 server side rendering template",
   "author": "Stephan de Vries <stephan281094@gmail.com>",
+  "version": "0.1.0",
   "license": "MIT",
   "private": false,
   "license": "MIT",
