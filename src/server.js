@@ -6,10 +6,10 @@ export default (context) => {
   const matchedComponents = router.getMatchedComponents()
 
   if (!matchedComponents.length) {
-    return Promise.reject({ code: '404' })
+    return Promise.reject(new Error('Could not find matched page'))
   }
 
-  return Promise.all(matchedComponents.map(component => {
+  return Promise.all(matchedComponents.map((component) => {
     if (component.preFetch) {
       return component.preFetch(store)
     }
