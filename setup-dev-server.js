@@ -1,8 +1,8 @@
 const path = require('path')
 const webpack = require('webpack')
 const MFS = require('memory-fs')
-const clientConfig = require('./config/webpack.client.config')
-const serverConfig = require('./config/webpack.server.config')
+const clientConfig = require('./build/webpack.client.config')
+const serverConfig = require('./build/webpack.server.config')
 
 module.exports = function setupDevServer (app, opts) {
   clientConfig.entry.app = ['webpack-hot-middleware/client', clientConfig.entry.app]
@@ -15,6 +15,7 @@ module.exports = function setupDevServer (app, opts) {
   const clientCompiler = webpack(clientConfig)
   const devMiddleware = require('webpack-dev-middleware')(clientCompiler, {
     publicPath: clientConfig.output.publicPath,
+    quiet: true,
     stats: {
       colors: true,
       chunks: false

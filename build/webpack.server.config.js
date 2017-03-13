@@ -1,14 +1,15 @@
 const webpack = require('webpack')
 const base = require('./webpack.base.config')
+const merge = require('webpack-merge')
 
-module.exports = Object.assign({}, base, {
+module.exports = merge(base, {
   target: 'node',
   devtool: false,
   entry: './src/server.js',
-  output: Object.assign({}, base.output, {
+  output: {
     filename: 'server.js',
     libraryTarget: 'commonjs2'
-  }),
+  },
   externals: Object.keys(require('../package.json').dependencies),
   plugins: [
     new webpack.DefinePlugin({

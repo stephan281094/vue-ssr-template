@@ -1,5 +1,7 @@
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
 const HTMLPlugin = require('html-webpack-plugin')
+const merge = require('webpack-merge')
 const path = require('path')
 const ServiceWorkerPlugin = require('serviceworker-webpack-plugin')
 const webpack = require('webpack')
@@ -7,7 +9,7 @@ const webpack = require('webpack')
 const base = require('./webpack.base.config')
 const vueConfig = require('./vue-loader.config')
 
-const config = Object.assign({}, base, {
+const config = merge(base, {
   plugins: (base.plugins || []).concat([
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
@@ -18,8 +20,9 @@ const config = Object.assign({}, base, {
     }),
     new HTMLPlugin({
       filename: '_index.html',
-      template: 'config/template.html'
-    })
+      template: 'build/template.html'
+    }),
+    new FriendlyErrorsWebpackPlugin()
   ])
 })
 

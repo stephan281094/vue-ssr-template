@@ -63,7 +63,6 @@ app.get('*', (req, res) => {
   res.setHeader('Content-Type', 'text/html')
   res.setHeader('Server', serverInfo)
 
-  var s = Date.now()
   const context = { url: req.url }
   const renderStream = renderer.renderToStream(context)
 
@@ -98,7 +97,6 @@ app.get('*', (req, res) => {
       )
     }
     res.end(indexHTML.tail)
-    console.log(`whole request: ${Date.now() - s}ms`)
   })
 
   renderStream.on('error', err => {
