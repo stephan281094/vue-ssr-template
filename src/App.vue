@@ -20,7 +20,9 @@
       meta: [
         { charset: 'utf-8' },
         { name: 'mobile-web-app-capable', content: 'yes' },
+        { 'http-equiv': 'x-ua-compatible', conent: 'ie=edge' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui' },
+        { name: 'description', content: 'Welcome to the Vue SSR template!' },
         { name: 'theme-color', content: '#000' }
       ],
       link: [
