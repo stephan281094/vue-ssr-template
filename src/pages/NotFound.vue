@@ -8,8 +8,13 @@
 <script>
   export default {
     name: 'page-notfound',
-    metaInfo: {
-      title: 'Page not found'
+    context: {
+      head: {
+        title: '404 - Vue SSR template',
+        meta: [
+          { name: 'description', content: 'Page not found' }
+        ]
+      }
     }
   }
 </script>

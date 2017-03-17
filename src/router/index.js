@@ -1,14 +1,13 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Meta from 'vue-meta'
+import has from 'lodash/has'
 
 Vue.use(Router)
-Vue.use(Meta)
 
 import Home from '~pages/Home.vue'
 import NotFound from '~pages/NotFound.vue'
 
-export default new Router({
+const router = new Router({
   mode: 'history',
   linkActiveClass: 'active',
   routes: [
@@ -16,3 +15,16 @@ export default new Router({
     { path: '*', component: NotFound }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  const component = to.matched.length && to.matched[0].components.default
+
+  // Set the title dynamically
+  if (typeof document !== 'undefined' && has(component, 'context.head.title')) {
+    document.title = component.context.head.title
+  }
+
+  next()
+})
+
+export default router

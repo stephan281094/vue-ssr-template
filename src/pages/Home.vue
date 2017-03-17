@@ -7,6 +7,11 @@
 
 <script>
   export default {
-    name: 'page-home'
+    name: 'page-home',
+    context: {
+      head: {
+        title: 'Home - Vue SSR template'
+      }
+    }
   }
 </script>
