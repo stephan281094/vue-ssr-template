@@ -1,5 +1,4 @@
 const path = require('path')
-const vueConfig = require('./vue-loader.config')
 
 module.exports = {
   devtool: '#source-map',
@@ -34,7 +33,17 @@ module.exports = {
       {
         test: /\.vue$/,
         loader: 'vue-loader',
-        options: vueConfig
+        options: {
+          preserveWhitespace: false,
+          postcss: [
+            require('autoprefixer')({
+              browsers: ['last 3 versions']
+            })
+          ],
+          loaders: {
+            scss: 'vue-style-loader!css-loader!sass-loader'
+          }
+        }
       },
       {
         test: /\.js$/,

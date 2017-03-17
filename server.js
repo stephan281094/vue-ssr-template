@@ -2,7 +2,6 @@ const fs = require('fs')
 const path = require('path')
 const express = require('express')
 const compression = require('compression')
-const serialize = require('serialize-javascript')
 const resolve = (file) => path.resolve(__dirname, file)
 
 const isProd = process.env.NODE_ENV === 'production'
@@ -49,8 +48,8 @@ app.get('*', (req, res) => {
 
   const s = Date.now()
 
-  res.setHeader("Content-Type", "text/html")
-  res.setHeader("Server", serverInfo)
+  res.setHeader('Content-Type', 'text/html')
+  res.setHeader('Server', serverInfo)
 
   const errorHandler = err => {
     if (err && err.code === 404) {
