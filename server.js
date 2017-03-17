@@ -12,38 +12,25 @@ const serverInfo =
 
 const app = express()
 
-let indexHTML
 let renderer
 if (isProd) {
-  renderer = createRenderer(fs.readFileSync(resolve('./dist/server.js'), 'utf-8'))
-  indexHTML = parseIndex(fs.readFileSync(resolve('./dist/_index.html'), 'utf-8'))
+  const bundle = require('./dist/vue-ssr-bundle.json')
+  const template = fs.readFileSync(resolve('./dist/_index.html'), 'utf-8')
+  renderer = createRenderer(bundle, template)
 } else {
-  require('./setup-dev-server')(app, {
-    bundleUpdated: (bundle) => {
-      renderer = createRenderer(bundle)
-    },
-    indexUpdated: (index) => {
-      indexHTML = parseIndex(index)
-    }
+  require('./setup-dev-server')(app, (bundle, template) => {
+    renderer = createRenderer(bundle, template)
   })
 }
 
-function createRenderer (bundle) {
+function createRenderer (bundle, template) {
   return require('vue-server-renderer').createBundleRenderer(bundle, {
+    template,
     cache: require('lru-cache')({
       max: 1000,
       maxAge: 1000 * 60 * 15
     })
   })
-}
-
-function parseIndex (template) {
-  const contentMarker = '{{ marker }}'
-  const i = template.indexOf(contentMarker)
-  return {
-    head: template.slice(0, i),
-    tail: template.slice(i + contentMarker.length)
-  }
 }
 
 const serve = (path, cache) => express.static(resolve(path), {
@@ -53,61 +40,33 @@ const serve = (path, cache) => express.static(resolve(path), {
 app.use(serve('./public', true))
 app.use(compression({ threshold: 0 }))
 app.use('/service-worker.js', serve('./dist/service-worker.js'))
-app.use('/dist', serve('./dist'))
+app.use('/dist', serve('./dist', true))
 
 app.get('*', (req, res) => {
   if (!renderer) {
     return res.end('waiting for compilation... refresh in a moment.')
   }
 
-  res.setHeader('Content-Type', 'text/html')
-  res.setHeader('Server', serverInfo)
+  const s = Date.now()
 
-  const context = { url: req.url }
-  const renderStream = renderer.renderToStream(context)
+  res.setHeader("Content-Type", "text/html")
+  res.setHeader("Server", serverInfo)
 
-  renderStream.once('data', () => {
-    const {
-      title, htmlAttrs, bodyAttrs, link, style, script, noscript, meta
-    } = context.meta.inject()
-
-    let head = indexHTML.head
-    head = head.replace('{{ meta-html-attrs }}', htmlAttrs.text())
-    head = head.replace('{{ meta-meta }}', meta.text())
-    head = head.replace('{{ meta-title }}', title.text())
-    head = head.replace('{{ meta-link }}', link.text())
-    head = head.replace('{{ meta-style }}', style.text())
-    head = head.replace('{{ meta-script }}', script.text())
-    head = head.replace('{{ meta-noscript }}', noscript.text())
-    head = head.replace('{{ meta-body-attrs }}', bodyAttrs.text())
-
-    res.write(head)
-  })
-
-  renderStream.on('data', (chunk) => {
-    res.write(chunk)
-  })
-
-  renderStream.on('end', () => {
-    if (context.initialState) {
-      res.write(
-        `<script>window.__INITIAL_STATE__=${
-          serialize(context.initialState, { isJSON: true })
-        }</script>`
-      )
-    }
-    res.end(indexHTML.tail)
-  })
-
-  renderStream.on('error', err => {
-    if (err && err.code === '404') {
+  const errorHandler = err => {
+    if (err && err.code === 404) {
       res.status(404).end('404 | Page Not Found')
-      return
+    } else {
+      // Render Error Page or Redirect
+      res.status(500).end('500 | Internal Server Error')
+      console.error(`error during render : ${req.url}`)
+      console.error(err)
     }
-    res.status(500).end('Internal Error 500')
-    console.error(`error during render : ${req.url}`)
-    console.error(err)
-  })
+  }
+
+  renderer.renderToStream({ url: req.url })
+    .on('error', errorHandler)
+    .on('end', () => console.log(`whole request: ${Date.now() - s}ms`))
+    .pipe(res)
 })
 
 const port = process.env.PORT || 3000
